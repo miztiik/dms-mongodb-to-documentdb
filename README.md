@@ -265,25 +265,17 @@ Thank you for your interest in contributing to our project. Whether it's a bug r
 
 ### 📚 References
 
-1. [Amazon API Gateway stage variables reference][1]
+1. [Setup MongoDB Community Edition on EC2][1]
 
-1. [Set stage variables using the Amazon API Gateway console][2]
+1. [Create Database in MongoDB][2]
 
-1. [Set up stage variables for a REST API deployment][3]
+1. [Create Index in Mongodb][3]
 
-1. [Using Amazon API Gateway stage variables][4]
+1. [Setup MongoDB for public access][4]
 
-1. [CDK Github Issue: Deploying new version of lambda function][5]
+1. [Pymongo Insert][5]
 
-1. [CDK Associate a specified version of Lambda with an alias?][6]
-
-1. [CDK API Gateway to a lambda Alias Integration?][7]
-
-1. [API Gateway Stage Variables in ReST APIs][8]
-
-1. [API Gateway Stage Variables in HTTP APIs][9]
-
-1. [API Gateway Best Practices for Multiple Environments & Stages][10]
+1. [Pymongo Insert][6]
 
 ### 🏷️ Metadata
 
@@ -291,16 +283,12 @@ Thank you for your interest in contributing to our project. Whether it's a bug r
 
 ![miztiik-success-green](https://img.shields.io/badge/miztiik-success-green)
 
-[1]: https://docs.amazonaws.cn/en_us/apigateway/latest/developerguide/aws-api-gateway-stage-variables-reference.html
-[2]: https://docs.amazonaws.cn/en_us/apigateway/latest/developerguide/how-to-set-stage-variables-aws-console.html
-[3]: https://docs.amazonaws.cn/en_us/apigateway/latest/developerguide/stage-variables.html
-[4]: https://docs.aws.amazon.com/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html
-[5]: https://github.com/aws/aws-cdk/issues/5334
-[6]: https://stackoverflow.com/questions/62442651/aws-cdk-how-do-i-associate-a-specified-version-of-lambda-with-an-alias
-[7]: https://stackoverflow.com/questions/63477633/how-do-you-point-api-gateway-to-a-lambda-alias-in-cdk
-[8]: https://docs.aws.amazon.com/apigateway/latest/developerguide/stage-variables.html
-[9]: https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-stages.html
-[10]: https://youtu.be/yfJZc3sJZ8E?t=2405
+[1]: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/
+[2]: https://www.mongodb.com/basics/create-database
+[3]: https://www.guru99.com/working-mongodb-indexes.html
+[4]: https://ianlondon.github.io/blog/mongodb-auth/
+[5]: https://pythonexamples.org/python-mongodb-insert-document/
+[6]: https://www.codespeedy.com/create-collections-and-insert-data-to-collection-in-mongodb-python/
 [100]: https://www.udemy.com/course/aws-cloud-security/?referralCode=B7F1B6C78B45ADAF77A9
 [101]: https://www.udemy.com/course/aws-cloud-security-proactive-way/?referralCode=71DC542AD4481309A441
 [102]: https://www.udemy.com/course/aws-cloud-development-kit-from-beginner-to-professional/?referralCode=E15D7FB64E417C547579
