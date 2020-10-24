@@ -21,7 +21,7 @@ We will follow an multi-stage process to accomplish our goal. We need the follow
 
 ![Miztiik Automation: Database Migration - MongoDB to Amazon DocumentDB](images/miztiik_architecture_mongodb_to_documentdb_02.png)
 
-In this article, we will build an architecture, similar to the one shown above - A simple API using API Gateway which will trigger a Lambda function. We will have an stageVariable `lambdaAlias` and lets assume it is going to be an `prod` environment. The lambda will have multiple alias point at different stage of development. `prod` pointing to the most stable version and `dev` pointing to the bleeding edlge version.
+In this article, we will build an architecture, similar to the one shown above - A simple mongo instance running on EC2 _(You are welcome to use your own mongodb instead_). For target we will build a Amazon DocumenDB cluster and use DMS to migrate the data.
 
 In this Workshop you will practice how to migrate your MongoDB databases to Amazon DocumentDB using different strategies.
 
