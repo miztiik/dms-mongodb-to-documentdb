@@ -13,13 +13,12 @@ class GlobalArgs:
     OWNER = "MystiqueAutomation"
     ENVIRONMENT = "production"
     REPO_NAME = "dms-mongodb-to-documentdb"
-
     SOURCE_INFO = f"https://github.com/miztiik/{REPO_NAME}"
     VERSION = "2020_10_01"
     MIZTIIK_SUPPORT_EMAIL = ["mystique@example.com", ]
 
 
-class DmsPrerequisiteStack(core.Stack):
+class DatabaseMigrationPrerequisiteStack(core.Stack):
 
     def __init__(
         self,
@@ -73,17 +72,18 @@ class DmsPrerequisiteStack(core.Stack):
             )
         )
 
-        # Retrieve Cognito App Client Secret and Add to Secrets Manager
+        # Create SSH Key and Store in Parameter Store
+        self.custom_ssh_key_name="mystique-automation-ssh-key"
         ssh_key_generator = SshKeyGeneratorStack(
             self,
             "ssh-key-generator",
-            ssh_key_name="mystique-automation-ssh-key"
+            ssh_key_name=self.custom_ssh_key_name
         )
 
         # Export Value
         self.ssh_key_gen_status = ssh_key_generator.response
 
-        # Create Security Group for DMS Replication Instance
+        # Create Security Group for DMS Instance
         dms_sg = _ec2.SecurityGroup(
             self,
             id="dmsSecurityGroup",
@@ -97,8 +97,18 @@ class DmsPrerequisiteStack(core.Stack):
             connection=_ec2.Port.tcp(27017),
             description="Allow MongoDB inbound connetions"
         )
+        dms_sg.add_ingress_rule(
+            peer=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            connection=_ec2.Port.tcp(1433),
+            description="Allow MS SQL inbound connetions"
+        )
+        dms_sg.add_ingress_rule(
+            peer=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            connection=_ec2.Port.tcp(3306),
+            description="Allow My SQL inbound connetions"
+        )
 
-        # Create Security Group for DocsDB Replication Instance
+        # Create Security Group for DocsDB Instance
         docsdb_sg = _ec2.SecurityGroup(
             self,
             id="docsDbSecurityGroup",
@@ -110,7 +120,36 @@ class DmsPrerequisiteStack(core.Stack):
         docsdb_sg.add_ingress_rule(
             peer=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
             connection=_ec2.Port.tcp(27017),
-            description="Allow DocsDB inbound connetions"
+            description="Allow DocsDB inbound connetions")
+
+        # Create Security Group for MSSQL Server Instance
+        ms_sql_db_sg = _ec2.SecurityGroup(
+            self,
+            id="msSqlDbSecurityGroup",
+            vpc=vpc,
+            security_group_name=f"mssql_db_sg_{id}",
+            description="Security Group for MSSQL"
+        )
+
+        ms_sql_db_sg.add_ingress_rule(
+            peer=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            connection=_ec2.Port.tcp(1433),
+            description="Allow MSSQL inbound connetions"
+        )
+
+        # Create Security Group for MySQL Server Instance
+        my_sql_db_sg = _ec2.SecurityGroup(
+            self,
+            id="mySqlDbSecurityGroup",
+            vpc=vpc,
+            security_group_name=f"mysql_db_sg_{id}",
+            description="Security Group for MySQL"
+        )
+
+        my_sql_db_sg.add_ingress_rule(
+            peer=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            connection=_ec2.Port.tcp(3306),
+            description="Allow MySQL inbound connetions"
         )
 
         # Outputs
@@ -120,6 +159,7 @@ class DmsPrerequisiteStack(core.Stack):
             value=f"{GlobalArgs.SOURCE_INFO}",
             description="To know more about this automation stack, check out our github page."
         )
+
         output_1 = core.CfnOutput(
             self,
             "SshKeyGenerationStatus",

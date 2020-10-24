@@ -98,17 +98,16 @@ function install_nodejs(){
 
 function install_mongodb(){
 # db.createUser({ user: 'mongoDbAdmin', pwd: 'Som3thingSh0uldBe1nVault', roles: [{ role: 'read', db:'local'},{ role: 'userAdminAnyDatabase', db:'admin'},{ role: 'dbAdminAnyDatabase', db:'admin'},{ role: 'readWriteAnyDatabase', db:'admin'}]})
-
+# INSTALLING MONGO 4.0 (as that is the LATEST VERSION SUPPORTED BY DMS)
 cat > '/etc/yum.repos.d/mongodb-org-4.4.repo' << "EOF"
-[mongodb-org-4.4]
+[mongodb-org-4.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.0/x86_64/
 gpgcheck=1
 enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
 EOF
     sudo yum install -y mongodb-org
-
     sudo systemctl daemon-reload
     sudo systemctl start mongod
     sudo systemctl enable mongod
@@ -128,6 +127,7 @@ db.createUser(
     pwd: "Som3thingSh0uldBe1nVault",
     roles: [ { role: "read", db: "local" }, "read"] 
 })
+db.customers.createIndex( { "custid": 1 } )
 EOF
 
 mongo < mongo_create_admin_user.js
@@ -152,7 +152,7 @@ sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 
 # Enabling Replication
 echo 'replication:
-    replSetName: "rs0"' >> /etc/mongod.conf
+  replSetName: "rs0"' >> /etc/mongod.conf
 sudo systemctl restart mongod
 cat > 'mongo_pre_load.js' << "EOF"
 rs.initiate( 

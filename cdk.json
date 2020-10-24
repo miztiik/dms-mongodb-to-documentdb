@@ -12,6 +12,6 @@
     "ko_fi": "https://ko-fi.com/miztiik",
     "learn_aws_advanced_security": "https://www.udemy.com/course/aws-cloud-security-proactive-way",
     "service_name": "dms-mongodb-to-documentdb",
-    "github_repo_url": "https://github.com/miztiik/big-data-analytics-workshops/dms-mongodb-to-documentdb"
+    "github_repo_url": "https://github.com/miztiik/dms-mongodb-to-documentdb"
   }
 }

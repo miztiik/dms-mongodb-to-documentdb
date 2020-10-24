@@ -1,5 +1,7 @@
 from aws_cdk import aws_ec2 as _ec2
 from aws_cdk import aws_iam as _iam
+from aws_cdk import aws_secretsmanager as _sm
+from aws_cdk import aws_ssm as _ssm
 from aws_cdk import core
 
 
@@ -10,19 +12,20 @@ class GlobalArgs:
 
     OWNER = "MystiqueAutomation"
     ENVIRONMENT = "production"
-    REPO_NAME = "mongodb-on-ec2"
+    REPO_NAME = "sql_client_on_ec2"
     SOURCE_INFO = f"https://github.com/miztiik/{REPO_NAME}"
-    VERSION = "2020_10_01"
+    VERSION = "2020_10_22"
     MIZTIIK_SUPPORT_EMAIL = ["mystique@example.com", ]
 
 
-class MongodbOnEc2Stack(core.Stack):
+class SqlClientOnEc2Stack(core.Stack):
 
     def __init__(
         self,
         scope: core.Construct, id: str,
         vpc,
         ec2_instance_type: str,
+        ssh_key_name: str,
         stack_log_level: str,
         **kwargs
     ) -> None:
@@ -68,27 +71,51 @@ class MongodbOnEc2Stack(core.Stack):
             resources=["arn:aws:logs:*:*:*"]
         ))
 
+        # Get the latest Windows ami
+        windows_ami = _ec2.MachineImage.latest_windows(
+            version=_ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_FULL_BASE
+        )
+
+        verify_ssh_key = _ssm.StringParameter.from_string_parameter_name(
+            self,
+            "sshKey",
+            string_parameter_name="mystique-automation-ssh-key"
+        )
+
         # web_app_server Instance
         web_app_server = _ec2.Instance(
             self,
-            "webAppServer",
+            "sqlClientServer",
             instance_type=_ec2.InstanceType(
                 instance_type_identifier=f"{ec2_instance_type}"),
-            instance_name="web_app_server_01",
-            machine_image=amzn_linux_ami,
+            instance_name="SQL_Client",
+            machine_image=windows_ami,
             vpc=vpc,
             vpc_subnets=_ec2.SubnetSelection(
                 subnet_type=_ec2.SubnetType.PUBLIC
             ),
             role=_instance_role,
-            user_data=_ec2.UserData.custom(
-                user_data)
+            # user_data=_ec2.UserData.custom(
+            #     user_data)
+            key_name=ssh_key_name
         )
 
-        # Allow Web Traffic to WebServer
+        # Allow Incoming MSSQL Traffic
         web_app_server.connections.allow_from_any_ipv4(
-            _ec2.Port.tcp(27017),
-            description="Allow Incoming MongoDB Traffic"
+            _ec2.Port.tcp(1433),
+            description="Allow Incoming MSSQL Traffic"
+        )
+
+        # Allow RDP Traffic
+        web_app_server.connections.allow_internally(
+            port_range=_ec2.Port.tcp(3389),
+            description="Allow RDP Traffic"
+        )
+
+        web_app_server.connections.allow_from(
+            other=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            port_range=_ec2.Port.tcp(3389),
+            description="Allow RDP Traffic"
         )
 
         # Allow CW Agent to create Logs
@@ -111,9 +138,9 @@ class MongodbOnEc2Stack(core.Stack):
         )
         output_1 = core.CfnOutput(
             self,
-            "MongoPrivateIp",
+            "SQLClientPrivateIp",
             value=f"http://{web_app_server.instance_private_ip}",
-            description=f"Private IP of MongoDB on EC2"
+            description=f"Private IP of SQL Client on EC2"
         )
         output_2 = core.CfnOutput(
             self,
@@ -125,5 +152,5 @@ class MongodbOnEc2Stack(core.Stack):
                 f"{web_app_server.instance_id}"
                 f";sort=instanceId"
             ),
-            description=f"Login to the instance using Systems Manager and use curl to access the Mongo DB Instance"
+            description=f"Login to the instance using Amazon Systems Manager"
         )

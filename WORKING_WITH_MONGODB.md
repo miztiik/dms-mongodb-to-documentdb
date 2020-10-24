@@ -17,6 +17,8 @@
     db.customers.find()
     # List indexes
     db.customers.getIndexes()
+    # To create Index
+    db.customers.createIndex( { "custid": 1 } )
 
     # For doing CDC, we need oplog enabled in MongoDB
     # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MongoDB.html
@@ -31,10 +33,15 @@
     db.oplog.rs.stats()
     db.oplog.rs.find();
 
+    # Confirm if instance is master
+    db.isMaster()
+
     # Verify Replication Configuration
     rs.conf()
     rs.status()
 
+    # To add instance to replication
+    rs.add("10.13.10.81:27017)
     ```
 
     ```json

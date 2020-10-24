@@ -19,7 +19,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="dms_mongodb_to_documentdb"),
 
     install_requires=[
-        "aws-cdk.core==1.63.0",
+        "aws-cdk.core==1.70.0",
     ],
 
     python_requires=">=3.6",

@@ -21,6 +21,7 @@ class GlobalArgs:
     DB_ADMIN_PASS = "Som3thingSh0uldBe1nVault"
     DB_NAME = "miztiik_db"
     DB_COLLECTIONS_1 = "customers"
+    DB_COLLECTIONS_2 = "loyalty"
     NO_OF_RECORDS_TO_INSERT = 10
     INSERT_DURATION = 57
 
@@ -50,8 +51,7 @@ def insert_records():
     # GET LOCAL IP
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
-    print(f"IP Address: {ip_address}")
-
+    print(f"Connecting to Mongo at IP Address: {ip_address}")
     # client = pymongo.MongoClient("mongodb://mongoDbAdmin:Som3thingSh0uldBe1nVault@10.10.0.52/miztiik_db")
     # mongo -u mongoDbAdmin -p Som3thingSh0uldBe1nVault 10.10.0.123
     # mongodb://mongoDbAdmin:Som3thingSh0uldBe1nVault@18.236.250.136/miztiik_db
@@ -61,21 +61,43 @@ def insert_records():
     db = client[GlobalArgs.DB_NAME]
     print(connection)
     print(db)
-    customer_coll = db[GlobalArgs.DB_COLLECTIONS_1]
+    customers_coll = db[GlobalArgs.DB_COLLECTIONS_1]
+    loyalty_coll = db[GlobalArgs.DB_COLLECTIONS_2]
     begin_time = datetime.datetime.now()
     new_time = begin_time
     i = 0
     while (new_time - begin_time).total_seconds() < GlobalArgs.INSERT_DURATION:
-        result = db[GlobalArgs.DB_COLLECTIONS_1].insert_one(getReferrer())
-        print(result.inserted_id)
+        cust_data = getReferrer()
+        result = db[GlobalArgs.DB_COLLECTIONS_1].insert_one(cust_data)
+        print(f"customer_record_id:{result.inserted_id}")
+        insert_loyalty_points(cust_data["custid"])
         new_time = datetime.datetime.now()
         i += 1
     print(f'{{"no_of_records_inserted":{i}}}')
     client.close()
     # print the number of documents in a collection
-    print(f'{{"total_coll_count":{customer_coll.estimated_document_count()}}}')
+    print(f'{{"total_coll_count":{customers_coll.estimated_document_count()}}}')
     logging.info(
-        f'{{"total_coll_count":{customer_coll.estimated_document_count()}}}')
+        f'{{"total_coll_count":{customers_coll.estimated_document_count()}}}')
+    print(f'{{"total_loyalty_coll_count":{loyalty_coll.estimated_document_count()}}}')
+    logging.info(
+        f'{{"total_loyalty_coll_count":{loyalty_coll.estimated_document_count()}}}')
+
+
+def insert_loyalty_points(cust_id):
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    connection = f"mongodb://{GlobalArgs.DB_ADMIN_NAME}:{GlobalArgs.DB_ADMIN_PASS}@{ip_address}/admin"
+    client = pymongo.MongoClient(connection)
+    db = client[GlobalArgs.DB_NAME]
+    loyalty_coll = db[GlobalArgs.DB_COLLECTIONS_2]
+    data={}
+    data["custid"] = cust_id
+    data["pts"] = random.randint(1, 2500)
+    result = db[GlobalArgs.DB_COLLECTIONS_2].insert_one(data)
+    print(f"customer_loyalty_record_id:{result.inserted_id}")
+    client.close()
+
 
 
 logger = logging.getLogger()

@@ -227,7 +227,9 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
 
 1.  ## 🎯 Additional Exercises
 
-    We have shown how to migrate existing data using DMS. It is possible to use DMS to replicate changes(Change Data Capture - CDC). For this, you need to setup your mongodb(on EC2/OnPrem) as a replica set and set the migration type of database migration task to `Migrate existing data and replication ongoing changes`
+    - We have shown how to migrate existing data using DMS. It is possible to use DMS to replicate changes(Change Data Capture - CDC). For this, you need to setup your mongodb(on EC2/OnPrem) as a replica set and set the migration type of database migration task to `Migrate existing data and replication ongoing changes`
+
+    - If your mongo database is small in size, you try to migrate using `mongodump` and `mongorestore`. You can refer to this documentation[7]
 
 1)  ## 🧹 CleanUp
 
@@ -289,6 +291,7 @@ Thank you for your interest in contributing to our project. Whether it's a bug r
 [4]: https://ianlondon.github.io/blog/mongodb-auth/
 [5]: https://pythonexamples.org/python-mongodb-insert-document/
 [6]: https://www.codespeedy.com/create-collections-and-insert-data-to-collection-in-mongodb-python/
+[7]: https://github.com/miztiik/aws-real-time-use-cases/tree/master/200-Storage-Migrate-To-DocumentDB
 [100]: https://www.udemy.com/course/aws-cloud-security/?referralCode=B7F1B6C78B45ADAF77A9
 [101]: https://www.udemy.com/course/aws-cloud-security-proactive-way/?referralCode=71DC542AD4481309A441
 [102]: https://www.udemy.com/course/aws-cloud-development-kit-from-beginner-to-professional/?referralCode=E15D7FB64E417C547579
