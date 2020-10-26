@@ -21,7 +21,7 @@ We will follow an multi-stage process to accomplish our goal. We need the follow
 
 ![Miztiik Automation: Database Migration - MongoDB to Amazon DocumentDB](images/miztiik_architecture_mongodb_to_documentdb_02.png)
 
-In this article, we will build an architecture, similar to the one shown above - A simple mongo instance running on EC2 _(You are welcome to use your own mongodb instead_). For target we will build a Amazon DocumenDB cluster and use DMS to migrate the data.
+In this article, we will build an architecture, similar to the one shown above - A simple mongo instance running on EC2 _(You are welcome to use your own mongodb instead_). For target we will build a Amazon DocumentDB cluster and use DMS to migrate the data.
 
 In this Workshop you will practice how to migrate your MongoDB databases to Amazon DocumentDB using different strategies.
 
@@ -73,7 +73,7 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
 
     ```bash
     vpc-stack
-    dms-prerequisite-stack
+    database-migration-prerequisite-stack
     mongodb-on-ec2
     ```
 
@@ -84,7 +84,7 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
     - **Stack: vpc-stack**
       This stack will do the following,
 
-      1. Create an custom VPC `miztiikVpc`(_We will use this VPC to host our source MongoDB, DocumentDB, DMS Replication Instance_)
+      1. Create an custom VPC `miztiikMigrationVpc`(_We will use this VPC to host our source MongoDB, DocumentDB, DMS Replication Instance_)
 
       Initiate the deployment with the following command,
 
@@ -92,7 +92,7 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
       cdk deploy vpc-stack
       ```
 
-    - **Stack: dms-prerequisite-stack**
+    - **Stack: database-migration-prerequisite-stack**
       This stack will do the following,
 
       1. DocumentDB & DMS Security groups - (_created during the prerequisite stack_)
@@ -106,12 +106,12 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
       Initiate the deployment with the following command,
 
       ```bash
-      cdk deploy dms-prerequisite-stack
+      cdk deploy database-migration-prerequisite-stack
       ```
 
       After successful completion, take a look at all the resources and get yourself familiar with them. We will be using them in the future.
 
-    - **Stack: Source Database - MongoDB**
+    - **Stack: `mongodb-on-ec2` Source Database - MySQLDB**
       This stack will do the following,
 
       1. Create an EC2 instance inside our custom VPC(_created during the prerequisite stack_)
@@ -134,9 +134,10 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
       - Navigate to `/var/log`
       - Run the following commands
         ```bash
+        cd /var/log
         git clone https://github.com/miztiik/dms-mongodb-to-documentdb
         cd dms-mongodb-to-documentdb/dms_mongodb_to_documentdb/stacks/back_end/bootstrap_scripts
-        python3 insert_records_to_mongodb
+        python3 insert_records_to_mongodb.py
         ```
       - You should be able to see some _`id`_ printed out and a summary at the end,
         _Expected Output_,
@@ -174,8 +175,8 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
 
     Couple of things to note,
 
-    - For VPC - Use our custom VPC `miztiikVpc`
-    - For Security Group - Use `docsdb_sg_dms-prerequisite-stack`
+    - For VPC - Use our custom VPC `miztiikMigrationVpc`
+    - For Security Group - Use `docsdb_sg_database-migration-prerequisite-stack`
 
     Download the public key for Amazon DocumentDB. We will need this to connect to DocumentDB Cluster from your machine and also from DMS Replication Instance
 
@@ -189,8 +190,8 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
 
     Couple of things to note,
 
-    - For VPC - Use our custom VPC `miztiikVpc`
-    - For Security Group - Use `dms_sg_dms-prerequisite-stack`
+    - For VPC - Use our custom VPC `miztiikMigrationVpc`
+    - For Security Group - Use `dms_sg_database-migration-prerequisite-stack`
 
     After creating the replication instance, We need to create few more resources to begin our replication. We will use defaults mostly
 
@@ -201,17 +202,17 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
       - Update user as `mongodbadmin`, the password `Som3thingSh0uldBe1nVault`
       - Authentication source as `admin`
       - Database name `miztiik_db`
-      - For endpoing specific attributes, choose the DMS Replication instance we create in the previous step
+      - Choose our custom VPC `miztiikMigrationVpc` and choose the DMS Replication instance we create in the previous step
     - **Endpoint for destination databases - DocumentDB**(_custom values listed below_)
       - Choose `docsdb` as target
       - For server name use the dnsname from docsdb, here is my example,
         - `docsdb.cluster-konstone.us-weast-2.docdb.amazonaws.com`
       - Ensure you choose SSL verification `verify-full` and upload CA certificate for the Amazon DocumentDB public key we downloaded earlier
       - Database name `miztiik_db`
-      - For endpoing specific attributes, choose the DMS Replication instance we create in the previous step
+      - Choose our custom VPC `miztiikMigrationVpc` and choose the DMS Replication instance we create in the previous step
     - Database Migration Task
       - Choose our replication instance, source & destination endpoints
-      - For Migration Type, choose `Migrate Existing Data`
+      - - For Migration Type, choose `Migrate Existing Data and replicate ongoing changes`
       - For Table Mappings, _Add new selection rule_, you can create a custom schema name and leave `%` for the table name and Action `Include`
       - Create Task
 
@@ -226,8 +227,6 @@ In this Workshop you will practice how to migrate your MongoDB databases to Amaz
     Here we have demonstrated how to use Amazon Database Migration Service(DMS) to migrate data from MongoDB to DocumentDB.
 
 1.  ## 🎯 Additional Exercises
-
-    - We have shown how to migrate existing data using DMS. It is possible to use DMS to replicate changes(Change Data Capture - CDC). For this, you need to setup your mongodb(on EC2/OnPrem) as a replica set and set the migration type of database migration task to `Migrate existing data and replication ongoing changes`
 
     - If your mongo database is small in size, you try to migrate using `mongodump` and `mongorestore`. You can refer to this documentation[7]
 

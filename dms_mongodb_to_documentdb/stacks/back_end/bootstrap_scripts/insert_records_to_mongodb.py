@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import json
 import logging
 import random
@@ -91,13 +93,12 @@ def insert_loyalty_points(cust_id):
     client = pymongo.MongoClient(connection)
     db = client[GlobalArgs.DB_NAME]
     loyalty_coll = db[GlobalArgs.DB_COLLECTIONS_2]
-    data={}
+    data = {}
     data["custid"] = cust_id
     data["pts"] = random.randint(1, 2500)
     result = db[GlobalArgs.DB_COLLECTIONS_2].insert_one(data)
     print(f"customer_loyalty_record_id:{result.inserted_id}")
     client.close()
-
 
 
 logger = logging.getLogger()

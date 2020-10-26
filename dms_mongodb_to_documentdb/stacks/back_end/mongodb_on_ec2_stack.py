@@ -68,13 +68,13 @@ class MongodbOnEc2Stack(core.Stack):
             resources=["arn:aws:logs:*:*:*"]
         ))
 
-        # web_app_server Instance
-        web_app_server = _ec2.Instance(
+        # db_server Instance
+        db_server = _ec2.Instance(
             self,
-            "webAppServer",
+            "dbServer",
             instance_type=_ec2.InstanceType(
                 instance_type_identifier=f"{ec2_instance_type}"),
-            instance_name="web_app_server_01",
+            instance_name="mongodb_server_01",
             machine_image=amzn_linux_ami,
             vpc=vpc,
             vpc_subnets=_ec2.SubnetSelection(
@@ -86,8 +86,18 @@ class MongodbOnEc2Stack(core.Stack):
         )
 
         # Allow Web Traffic to WebServer
-        web_app_server.connections.allow_from_any_ipv4(
-            _ec2.Port.tcp(27017),
+        db_server.connections.allow_from_any_ipv4(
+            _ec2.Port.tcp(80),
+            description="Allow Incoming HTTP Traffic"
+        )
+        # db_server.connections.allow_internally(
+        #     port_range=_ec2.Port.tcp(27017),
+        #     description="Allow Incoming MongoDB Traffic"
+        # )
+
+        db_server.connections.allow_from(
+            other=_ec2.Peer.ipv4(vpc.vpc_cidr_block),
+            port_range=_ec2.Port.tcp(27017),
             description="Allow Incoming MongoDB Traffic"
         )
 
@@ -112,7 +122,7 @@ class MongodbOnEc2Stack(core.Stack):
         output_1 = core.CfnOutput(
             self,
             "MongoPrivateIp",
-            value=f"http://{web_app_server.instance_private_ip}",
+            value=f"http://{db_server.instance_private_ip}",
             description=f"Private IP of MongoDB on EC2"
         )
         output_2 = core.CfnOutput(
@@ -122,7 +132,7 @@ class MongodbOnEc2Stack(core.Stack):
                 f"https://console.aws.amazon.com/ec2/v2/home?region="
                 f"{core.Aws.REGION}"
                 f"#Instances:search="
-                f"{web_app_server.instance_id}"
+                f"{db_server.instance_id}"
                 f";sort=instanceId"
             ),
             description=f"Login to the instance using Systems Manager and use curl to access the Mongo DB Instance"
