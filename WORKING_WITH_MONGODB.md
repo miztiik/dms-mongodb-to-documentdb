@@ -61,7 +61,7 @@
     use miztiik_db
     db.dropDatabase()
     # or Drop collections ( in this case 'customers' )
-    db.customers.drop
+    db.customers.drop()
     ```
 
 ## 📌 Who is using this
