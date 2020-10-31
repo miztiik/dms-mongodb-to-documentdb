@@ -1,0 +1,1104 @@
+{
+  "Description": "Miztiik Automation: VPC to host resources for DB Migration",
+  "Resources": {
+    "miztiikMigrationVpc565442F0": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.10.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/Resource"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1Subnet0D3B0A46": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.0.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/Subnet"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1RouteTableDB1CF4BC": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1RouteTableAssociation2ABCA68D": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1RouteTableDB1CF4BC"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1Subnet0D3B0A46"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1DefaultRoute2DA04753": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1RouteTableDB1CF4BC"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "miztiikMigrationVpcIGW84D148D9"
+        }
+      },
+      "DependsOn": [
+        "miztiikMigrationVpcVPCGW2AFB9BE0"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/DefaultRoute"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1EIP3221F9D2": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/EIP"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet1NATGateway4E55E9C3": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "miztiikMigrationVpcpublicSubnet1EIP3221F9D2",
+            "AllocationId"
+          ]
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1Subnet0D3B0A46"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet1/NATGateway"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet2Subnet09F13E2E": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.1.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet2/Subnet"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet2RouteTableD7E0FC5E": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/publicSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet2/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet2RouteTableAssociationA74C20CD": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet2RouteTableD7E0FC5E"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet2Subnet09F13E2E"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet2/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcpublicSubnet2DefaultRoute8E5FA6CC": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet2RouteTableD7E0FC5E"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "miztiikMigrationVpcIGW84D148D9"
+        }
+      },
+      "DependsOn": [
+        "miztiikMigrationVpcVPCGW2AFB9BE0"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/publicSubnet2/DefaultRoute"
+      }
+    },
+    "miztiikMigrationVpcappSubnet1SubnetE033CB3C": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.2.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "app"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/appSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet1/Subnet"
+      }
+    },
+    "miztiikMigrationVpcappSubnet1RouteTable5C89084F": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/appSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet1/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcappSubnet1RouteTableAssociation92FD8EDC": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcappSubnet1RouteTable5C89084F"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcappSubnet1SubnetE033CB3C"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet1/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcappSubnet1DefaultRoute8DC9B02F": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcappSubnet1RouteTable5C89084F"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1NATGateway4E55E9C3"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet1/DefaultRoute"
+      }
+    },
+    "miztiikMigrationVpcappSubnet2Subnet2770D56E": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.3.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "app"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/appSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet2/Subnet"
+      }
+    },
+    "miztiikMigrationVpcappSubnet2RouteTable1E686FC9": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/appSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet2/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcappSubnet2RouteTableAssociation069C627D": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcappSubnet2RouteTable1E686FC9"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcappSubnet2Subnet2770D56E"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet2/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcappSubnet2DefaultRouteDE2FA835": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcappSubnet2RouteTable1E686FC9"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "miztiikMigrationVpcpublicSubnet1NATGateway4E55E9C3"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/appSubnet2/DefaultRoute"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet1Subnet3D0F7B14": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.4.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "db"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/dbSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet1/Subnet"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet1RouteTableD864E0CB": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/dbSubnet1"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet1/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet1RouteTableAssociationD6A3E93F": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcdbSubnet1RouteTableD864E0CB"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcdbSubnet1Subnet3D0F7B14"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet1/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet2Subnet0AE344AB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.10.5.0/24",
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "db"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/dbSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet2/Subnet"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet2RouteTable29EB02F3": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc/dbSubnet2"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet2/RouteTable"
+      }
+    },
+    "miztiikMigrationVpcdbSubnet2RouteTableAssociationD0A16C4F": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "miztiikMigrationVpcdbSubnet2RouteTable29EB02F3"
+        },
+        "SubnetId": {
+          "Ref": "miztiikMigrationVpcdbSubnet2Subnet0AE344AB"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/dbSubnet2/RouteTableAssociation"
+      }
+    },
+    "miztiikMigrationVpcIGW84D148D9": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "AboutMe",
+            "Value": "https://github.com/miztiik/about-me"
+          },
+          {
+            "Key": "BuyMeACoffee",
+            "Value": "https://ko-fi.com/miztiik"
+          },
+          {
+            "Key": "GithubRepo",
+            "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "Name",
+            "Value": "vpc-stack/miztiikMigrationVpc"
+          },
+          {
+            "Key": "Owner",
+            "Value": "Mystique"
+          },
+          {
+            "Key": "OwnerProfile",
+            "Value": "https://github.com/miztiik"
+          },
+          {
+            "Key": "Project",
+            "Value": "dms-mongodb-to-documentdb"
+          },
+          {
+            "Key": "SkillShare",
+            "Value": "https://www.skillshare.com/r/profile/Kumar/407603333"
+          },
+          {
+            "Key": "Udemy",
+            "Value": "https://www.udemy.com/user/n-kumar"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/IGW"
+      }
+    },
+    "miztiikMigrationVpcVPCGW2AFB9BE0": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "miztiikMigrationVpc565442F0"
+        },
+        "InternetGatewayId": {
+          "Ref": "miztiikMigrationVpcIGW84D148D9"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "vpc-stack/miztiikMigrationVpc/VPCGW"
+      }
+    }
+  },
+  "Outputs": {
+    "AutomationFrom": {
+      "Description": "To know more about this automation stack, check out our github page.",
+      "Value": "https://github.com/miztiik/dms-mongodb-to-documentdb"
+    },
+    "VpcId": {
+      "Value": {
+        "Ref": "miztiikMigrationVpc565442F0"
+      },
+      "Export": {
+        "Name": "VpcId"
+      }
+    },
+    "ExportsOutputFnGetAttmiztiikMigrationVpc565442F0CidrBlock26C6F341": {
+      "Value": {
+        "Fn::GetAtt": [
+          "miztiikMigrationVpc565442F0",
+          "CidrBlock"
+        ]
+      },
+      "Export": {
+        "Name": "vpc-stack:ExportsOutputFnGetAttmiztiikMigrationVpc565442F0CidrBlock26C6F341"
+      }
+    },
+    "ExportsOutputRefmiztiikMigrationVpc565442F0198ABE60": {
+      "Value": {
+        "Ref": "miztiikMigrationVpc565442F0"
+      },
+      "Export": {
+        "Name": "vpc-stack:ExportsOutputRefmiztiikMigrationVpc565442F0198ABE60"
+      }
+    },
+    "ExportsOutputRefmiztiikMigrationVpcpublicSubnet1Subnet0D3B0A464867A110": {
+      "Value": {
+        "Ref": "miztiikMigrationVpcpublicSubnet1Subnet0D3B0A46"
+      },
+      "Export": {
+        "Name": "vpc-stack:ExportsOutputRefmiztiikMigrationVpcpublicSubnet1Subnet0D3B0A464867A110"
+      }
+    }
+  }
+}
